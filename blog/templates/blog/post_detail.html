@@ -1,0 +1,22 @@
+{% extends 'blog/base.html' %}
+
+{% block content %}
+    <article class="post">
+        {% if post.published_date %}
+            <time class="date">
+                {{ post.published_date }}
+            </time>
+        {% endif %}
+        <h2>{{ post.title }}</h2>
+        <p>{{ post.text|linebreaksbr }}</p>
+        
+        <p>Likes/Upvotes: {{ post.like_count }}</p>
+        {% if user.is_authenticated %}
+            <form action="{% url 'like_post' pk=post.pk %}" method="POST">
+                {% csrf_token %}
+                <button type="submit">{% if user in post.likes.all %}Unlike{% else %}Like{% endif %}</button>
+            </form>
+        {% endif %}
+        <a href="{% url 'post_edit' pk=post.pk %}" class="btn btn-primary">Edit Post</a>
+    </article>
+{% endblock %}
