@@ -13,7 +13,7 @@
         <p>Likes/Upvotes: {{ post.like_count }}</p>
             <form action="{% url 'like_post' pk=post.pk %}" method="POST">
                 {% csrf_token %}
-                <button type="submit">{% if user in post.likes.all %}Liked{% else %}Like{% endif %}</button>
+                <button type="submit">{% if user in post.likes.all %}Unlike{% else %}Like{% endif %}</button>
             </form>
         <a href="{% url 'post_edit' pk=post.pk %}" class="btn btn-primary">Edit Post</a>
     </article>
