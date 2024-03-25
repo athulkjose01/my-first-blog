@@ -16,11 +16,10 @@ def post_detail(request, pk):
 
 def like_post(request, pk):
     post = get_object_or_404(Post, pk=pk)
-    if request.user.is_authenticated:
-        if request.user in post.likes.all():
-            post.likes.remove(request.user)
-        else:
-            post.likes.add(request.user)
+    if request.user in post.likes.all():
+        post.likes.remove(request.user)
+    else:
+        post.likes.add(request.user)
     return redirect('post_detail', pk=pk)
 
 def post_new(request):
