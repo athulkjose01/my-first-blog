@@ -16,10 +16,21 @@ def post_detail(request, pk):
 
 def like_post(request, pk):
     post = get_object_or_404(Post, pk=pk)
-    if request.user in post.likes.all():
-        post.likes.remove(request.user)
+
+    # Check if the user's IP address or session has already liked the post
+    user_identifier = request.META.get('REMOTE_ADDR')  # Get user's IP address
+    if request.session.get('liked_posts', {}).get(pk):
+        # User's IP address or session has already liked the post, so remove the like
+        del request.session['liked_posts'][pk]
+        post.likes -= 1  # Decrement the likes count
     else:
-        post.likes.add(request.user)
+        # User's IP address or session has not liked the post, so add the like
+        request.session.setdefault('liked_posts', {})[pk] = True
+        post.likes += 1  # Increment the likes count
+
+    # Save the changes to the post (likes count)
+    post.save()
+
     return redirect('post_detail', pk=pk)
 
 def post_new(request):
