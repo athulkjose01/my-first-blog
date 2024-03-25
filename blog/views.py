@@ -16,10 +16,15 @@ def post_detail(request, pk):
 
 def like_post(request, pk):
     post = get_object_or_404(Post, pk=pk)
-    if request.user in post.likes.all():
-        post.likes.remove(request.user)
+    
+    # Get the 'admin' user from the User model (replace 'admin_username' with the actual username of your admin user)
+    admin_user = User.objects.get(username='admin')
+
+    if admin_user in post.likes.all():
+        post.likes.remove(admin_user)
     else:
-        post.likes.add(request.user)
+        post.likes.add(admin_user)
+
     return redirect('post_detail', pk=pk)
 
 def post_new(request):
